@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>中国好爸爸奖</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      background: radial-gradient(circle at top, #1b2a6b 0%, #0b1026 45%, #02030a 100%);
+      color: white;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .card {
+      width: min(92vw, 540px);
+      padding: 34px 22px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.13);
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      animation: floatCard 3s ease-in-out infinite;
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .medal {
+      font-size: 56px;
+      margin-bottom: 8px;
+      animation: shine 1.4s infinite;
+    }
+
+    @keyframes shine {
+      0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+      50% { transform: scale(1.12) rotate(5deg); filter: brightness(1.3); }
+    }
+
+    h1 {
+      margin: 8px 0 12px;
+      font-size: clamp(30px, 8vw, 46px);
+      letter-spacing: 2px;
+      color: #ffe7a3;
+      text-shadow: 0 0 18px rgba(255, 221, 130, 0.9);
+    }
+
+    .winner {
+      margin: 12px auto 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 231, 163, 0.18);
+      border: 1px solid rgba(255, 231, 163, 0.45);
+      color: #fff4c7;
+      font-size: clamp(22px, 6vw, 34px);
+      font-weight: bold;
+      text-shadow: 0 0 14px rgba(255, 221, 130, 0.7);
+    }
+
+    .message {
+      font-size: clamp(18px, 4.7vw, 24px);
+      line-height: 1.8;
+      color: #fff7dd;
+      margin: 0 auto 22px;
+    }
+
+    .love {
+      margin-top: 8px;
+      font-size: clamp(20px, 5vw, 27px);
+      color: #ffd1dc;
+      font-weight: bold;
+      text-shadow: 0 0 14px rgba(255, 150, 180, 0.9);
+    }
+
+    button {
+      border: none;
+      outline: none;
+      padding: 13px 24px;
+      border-radius: 999px;
+      font-size: 17px;
+      color: #3d2100;
+      background: linear-gradient(135deg, #ffe7a3, #ffb347);
+      box-shadow: 0 10px 30px rgba(255, 179, 71, 0.35);
+      cursor: pointer;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: rgba(0, 0, 0, 0.62);
+    }
+
+    .modal-box {
+      width: min(90vw, 440px);
+      padding: 30px 22px;
+      border-radius: 26px;
+      background: linear-gradient(145deg, #fff7df, #ffe2a8);
+      color: #5b3300;
+      text-align: center;
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.48);
+      animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.72); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-box h2 {
+      margin: 0 0 12px;
+      font-size: 30px;
+    }
+
+    .modal-box p {
+      margin: 0 0 20px;
+      font-size: 20px;
+      line-height: 1.7;
+      font-weight: bold;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .footer {
+      margin-top: 18px;
+      color: rgba(255,255,255,0.82);
+      font-size: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="fireworks"></canvas>
+
+  <div class="modal" id="welcomeModal">
+    <div class="modal-box">
+      <h2>🏆 中国好爸爸奖 🏆</h2>
+      <p>
+        现颁发中国好爸爸奖<br>
+        获奖人：田军<br>
+        爸爸，父亲节快乐！爱你哦 ❤️
+      </p>
+      <button onclick="closeModal()">领取奖杯</button>
+    </div>
+  </div>
+
+  <main class="page">
+    <section class="card">
+      <div class="medal">🏆</div>
+      <h1>中国好爸爸奖</h1>
+      <div class="winner">获奖人：田军</div>
+      <p class="message">
+        现颁发中国好爸爸奖<br>
+        获奖人：田军<br>
+        祝爸爸天天开心，万事胜意！
+      </p>
+      <div class="love">爸爸，父亲节快乐！爱你哦 ❤️</div>
+      <br>
+      <button onclick="launchBigFireworks()">为爸爸放烟花 🎆</button>
+      <div class="footer">爸爸辛苦啦，愿您每天都有好心情</div>
+    </section>
+  </main>
+
+  <script>
+    function closeModal() {
+      document.getElementById("welcomeModal").classList.add("hidden");
+      launchBigFireworks();
+    }
+
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+
+    let w, h;
+    let particles = [];
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    function randomColor() {
+      const colors = ["#ffdd57", "#ff6b6b", "#7bed9f", "#70a1ff", "#ff9ff3", "#ffffff"];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function createFirework(x, y, count = 80) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5 + 2;
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 100,
+          color: randomColor(),
+          size: Math.random() * 3 + 1.4
+        });
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = "rgba(2, 3, 10, 0.18)";
+      ctx.fillRect(0, 0, w, h);
+
+      particles.forEach((p, index) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.035;
+        p.life -= 1.2;
+
+        ctx.globalAlpha = Math.max(p.life / 100, 0);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (p.life <= 0) {
+          particles.splice(index, 1);
+        }
+      });
+
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    function launchBigFireworks() {
+      createFirework(w * 0.28, h * 0.28, 90);
+      createFirework(w * 0.72, h * 0.32, 90);
+      setTimeout(() => createFirework(w * 0.5, h * 0.22, 120), 300);
+      setTimeout(() => createFirework(w * 0.36, h * 0.48, 80), 600);
+      setTimeout(() => createFirework(w * 0.66, h * 0.52, 80), 900);
+    }
+
+    setInterval(() => {
+      createFirework(Math.random() * w, Math.random() * h * 0.55 + 40, 55);
+    }, 1700);
+
+    setTimeout(launchBigFireworks, 600);
+  </script>
+</body>
+</html>
